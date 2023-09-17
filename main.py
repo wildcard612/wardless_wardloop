@@ -109,4 +109,62 @@ print("Last tick:", ticks[-1])
 print("Scaled last tick to 1s:", ticks[-1] / 0.033)
 
 
-print(ticks)
+#print(ticks)
+
+
+def compute_cumulative_net_gain_per_tick(damage_interval=0.198, damage_amount=3000, recoup_percentage=0.7, total_duration=3.0, tick_duration=0.033):
+    ticks = compute_ticks(damage_interval, damage_amount, recoup_percentage, total_duration, tick_duration)
+
+    net_gains = []
+    cumulative_gain = 0
+    for i, recoup in enumerate(ticks):
+        current_time = i * tick_duration
+
+        # Jeśli to tick z obrażeniami
+        if current_time % damage_interval < tick_duration or current_time % damage_interval == 0:
+            damage_this_tick = 554
+        else:
+            damage_this_tick = 0
+
+        net_gain = recoup - damage_this_tick
+        cumulative_gain += net_gain
+        net_gains.append(cumulative_gain)
+
+    return net_gains
+
+# cumulative_net_gains = compute_cumulative_net_gain_per_tick()
+# for i, gain in enumerate(cumulative_net_gains):
+#     print(f"Tick {i+1}: {gain:.2f} HP")
+
+
+
+
+
+def find_lowest_cumulative_net_gain(damage_interval=0.198, damage_amount=2400, recoup_percentage=3, total_duration=3.0, tick_duration=0.033):
+    ticks = compute_ticks(damage_interval, damage_amount, recoup_percentage, total_duration, tick_duration)
+
+    net_gains = []
+    cumulative_gain = 0
+    for i, recoup in enumerate(ticks):
+        current_time = i * tick_duration
+
+        # Jeśli to tick z obrażeniami
+        if current_time % damage_interval < tick_duration or current_time % damage_interval == 0:
+            damage_this_tick = 1200
+        else:
+            damage_this_tick = 0
+
+        net_gain = recoup - damage_this_tick
+        cumulative_gain += net_gain
+        net_gains.append(cumulative_gain)
+
+    # Znajdź najniższą wartość i jej indeks
+    lowest_value = min(net_gains)
+    tick_at_lowest = net_gains.index(lowest_value) + 1
+
+    return lowest_value, tick_at_lowest
+
+lowest_value, tick_at_lowest = find_lowest_cumulative_net_gain()
+print(f"Najniższa wartość to: {lowest_value:.2f} HP, która wystąpiła w ticku {tick_at_lowest}.")
+
+
