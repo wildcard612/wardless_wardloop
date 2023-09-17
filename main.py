@@ -85,7 +85,7 @@ def recoup(dmg, relife, max_life):
 
 
 
-def compute_ticks(damage_interval=0.198, damage_amount=3000, recoup_percentage=0.1, total_duration=3.0, tick_duration=0.033):
+def compute_ticks(damage_interval=0.198, damage_amount=3000, recoup_percentage=1, total_duration=3.0, tick_duration=0.033):
     total_recoup_from_one_hit = damage_amount * recoup_percentage
     num_ticks = int(total_duration / tick_duration)
 
@@ -99,7 +99,7 @@ def compute_ticks(damage_interval=0.198, damage_amount=3000, recoup_percentage=0
             if 0 < current_time - time_since_last_hit * damage_interval <= 3:
                 total_recoup_this_tick += 2 * tick_duration * (current_time - time_since_last_hit * damage_interval) * total_recoup_from_one_hit / (total_duration ** 2)
 
-        ticks.append(total_recoup_this_tick)
+        ticks.append(round(total_recoup_this_tick, 5))
 
     return ticks
 
@@ -108,5 +108,5 @@ print("First tick:", ticks[0])
 print("Last tick:", ticks[-1])
 print("Scaled last tick to 1s:", ticks[-1] / 0.033)
 
-# for tick in ticks:
-#     print(tick)
+
+print(ticks)
